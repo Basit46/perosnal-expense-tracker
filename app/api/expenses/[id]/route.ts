@@ -1,60 +1,64 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
 import Expense from "@/models/Expense";
 import { connectDB } from "@/utils/mongodb";
 
-interface Params {
-  params: { id: string };
-}
-
-// GET one expense by ID
-export async function GET(req: Request, { params }: Params) {
+// GET a single expense
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   await connectDB();
-  try {
-    const expense = await Expense.findById(params.id);
-    if (!expense) {
-      return NextResponse.json({ error: "Expense not found" }, { status: 404 });
-    }
-    return NextResponse.json(expense);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  const expense = await Expense.findById(params.id);
+
+  if (!expense) {
+    return NextResponse.json({ error: "Expense not found" }, { status: 404 });
   }
+
+  return NextResponse.json(expense);
 }
 
-// UPDATE expense by ID
-export async function PUT(req: Request, { params }: Params) {
+// PUT update expense
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   await connectDB();
   try {
     const { title, max, spent, category } = await req.json();
-
-    const expense = await Expense.findById(params.id);
-    if (!expense) {
+    const updatedExpense = await Expense.findByIdAndUpdate(
+      params.id,
+      { title, max, spent, category },
+      { new: true, runValidators: true }
+    );
+    if (!updatedExpense) {
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
     }
-
-    // Update fields only if they exist in request
-    if (title !== undefined) expense.title = title;
-    if (max !== undefined) expense.max = max;
-    if (spent !== undefined) expense.spent = spent;
-    if (category !== undefined) expense.category = category;
-
-    await expense.save();
-
-    return NextResponse.json(expense);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json(updatedExpense);
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
   }
 }
 
-// DELETE expense by ID
-export async function DELETE(req: Request, { params }: Params) {
+// DELETE an expense
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   await connectDB();
   try {
-    const deletedExpense = await Expense.findByIdAndDelete(params.id);
-    if (!deletedExpense) {
+    const deleted = await Expense.findByIdAndDelete(params.id);
+    if (!deleted) {
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
     }
     return NextResponse.json({ message: "Expense deleted successfully" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
   }
 }
