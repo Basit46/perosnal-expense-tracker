@@ -1,95 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import React, { useState } from "react";
+import Collection from "./components/Collection";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+const Home = () => {
+  const [open, setOpen] = useState(false);
+
+  const { data } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: async () => {
+      const res = await axios.get("/api");
+      return res.data;
+    },
+  });
+
+  const allMax = data?.all.reduce(
+    (total: number, obj: any) => total + obj.max,
+    0
+  );
+  const allSpent = data?.all.reduce(
+    (total: number, obj: any) => total + obj.spent,
+    0
+  );
+  const allBal = allMax - allSpent;
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div>
+      <h1 className="text-[24px] font-medium">Expense Tracker</h1>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      <div className="mt-[40px]">
+        <div className="w-full border-y-[2px] border-y-gray-200 flex py-[10px] px-[6px] items-center justify-between">
+          <p className="font-medium text-[20px]">Max:</p>
+          <p className="text-[18px]">₦{allMax?.toLocaleString()}</p>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="w-full border-b-[2px] border-b-gray-200 flex py-[10px] px-[6px] items-center justify-between">
+          <p className="font-medium text-[20px]">Spent:</p>
+          <p className="text-[18px]">₦{allSpent?.toLocaleString()}</p>
+        </div>
+        <div className="w-full border-b-[2px] border-b-gray-200 flex py-[10px] px-[6px] items-center justify-between">
+          <p className="font-medium text-[20px]">Balance:</p>
+          <p className="text-[18px]">₦{allBal?.toLocaleString()}</p>
+        </div>
+      </div>
+
+      <div className="mt-[40px]">
+        <div className="mb-[10px] w-full flex items-center justify-between">
+          <h1 className="text-[18px]">Items:</h1>
+        </div>
+        <div className="mt-[10px] w-full grid grid-cols-2 gap-[10px]">
+          <Collection name="monthly" />
+          <Collection name="weekly" />
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
