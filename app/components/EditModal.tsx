@@ -82,7 +82,7 @@ const EditModal = ({
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="mt-[6px] w-full h-[40px] border border-[1px] px-[10px]"
+            className="mt-[6px] w-full h-[40px] border px-[10px]"
           />
         </div>
 
@@ -95,7 +95,7 @@ const EditModal = ({
             onChange={(e) =>
               setFormData({ ...formData, max: Number(e.target.value) })
             }
-            className="mt-[6px] w-full h-[40px] border border-[1px] px-[10px]"
+            className="mt-[6px] w-full h-[40px] border px-[10px]"
           />
         </div>
 
@@ -108,7 +108,7 @@ const EditModal = ({
             onChange={(e) =>
               setFormData({ ...formData, spent: Number(e.target.value) })
             }
-            className="mt-[6px] w-full h-[40px] border border-[1px] px-[10px]"
+            className="mt-[6px] w-full h-[40px] border px-[10px]"
           />
         </div>
 
