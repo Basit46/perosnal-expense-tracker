@@ -6,7 +6,7 @@ import { connectDB } from "@/utils/mongodb";
 // GET a single expense
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
 
@@ -23,7 +23,7 @@ export async function GET(
 // PUT update expense
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
 
@@ -50,7 +50,7 @@ export async function PUT(
 // DELETE an expense
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
 
