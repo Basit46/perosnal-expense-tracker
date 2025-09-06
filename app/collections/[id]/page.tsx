@@ -34,7 +34,7 @@ const CollectionDetails = () => {
     },
   });
 
-  const data = expenses?.[typeof id == "string" ? id : ""];
+  const data = expenses?.filter((e: any) => e.category == id);
 
   const collectionMax = data?.reduce(
     (total: number, obj: any) => total + obj.max,

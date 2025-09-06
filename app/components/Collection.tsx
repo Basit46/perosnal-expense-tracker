@@ -16,7 +16,7 @@ const Collection = ({ name }: { name: "weekly" | "monthly" }) => {
     },
   });
 
-  const data = expenses?.[name];
+  const data = expenses?.filter((e: any) => e.category == name);
 
   const collectionMax = data?.reduce(
     (total: number, obj: any) => total + obj.max,

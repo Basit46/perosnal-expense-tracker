@@ -16,11 +16,8 @@ const Home = () => {
     },
   });
 
-  const allMax = data?.all?.reduce(
-    (total: number, obj: any) => total + obj.max,
-    0
-  );
-  const allSpent = data?.all?.reduce(
+  const allMax = data?.reduce((total: number, obj: any) => total + obj.max, 0);
+  const allSpent = data?.reduce(
     (total: number, obj: any) => total + obj.spent,
     0
   );
