@@ -9,7 +9,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   await connectDB();
-  const expense = await Expense.findById(params.id);
+
+  const { id } = await params;
+  const expense = await Expense.findById(id);
 
   if (!expense) {
     return NextResponse.json({ error: "Expense not found" }, { status: 404 });
@@ -24,10 +26,12 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   await connectDB();
+
+  const { id } = await params;
   try {
     const { title, max, spent, category } = await req.json();
     const updatedExpense = await Expense.findByIdAndUpdate(
-      params.id,
+      id,
       { title, max, spent, category },
       { new: true, runValidators: true }
     );
@@ -49,8 +53,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   await connectDB();
+
+  const { id } = await params;
   try {
-    const deleted = await Expense.findByIdAndDelete(params.id);
+    const deleted = await Expense.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json({ error: "Expense not found" }, { status: 404 });
     }
