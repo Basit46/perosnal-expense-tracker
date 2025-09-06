@@ -30,7 +30,7 @@ const Modal = ({
         spent: Number(formData.spent),
       };
 
-      const res = await axios.post("http://localhost:3000/api", payload);
+      const res = await axios.post("/api", payload);
       return res.data;
     },
     onSuccess: () => {

@@ -28,10 +28,7 @@ const EditModal = ({
         spent: Number(formData.spent),
       };
 
-      const res = await axios.put(
-        `http://localhost:3000/api/expenses/${itemDetails._id}`,
-        payload
-      );
+      const res = await axios.put(`/api/expenses/${itemDetails._id}`, payload);
       return res.data;
     },
     onSuccess: () => {
@@ -42,9 +39,7 @@ const EditModal = ({
 
   const { mutate: deleteMutate, isPending: deleteIsPending } = useMutation({
     mutationFn: async () => {
-      const res = await axios.delete(
-        `http://localhost:3000/api/expenses/${itemDetails._id}`
-      );
+      const res = await axios.delete(`/api/expenses/${itemDetails._id}`);
       return res.data;
     },
     onSuccess: () => {
